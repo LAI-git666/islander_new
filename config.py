@@ -1,62 +1,34 @@
-"""
-游戏配置和常量定义
-"""
-import pygame
+# config.py
 
-# 游戏常量
-WORLD_SIZE = 30
-TILE_SIZE = 32
-SCREEN_WIDTH, SCREEN_HEIGHT = 1024, 768
-HUD_HEIGHT = 120
-FPS = 30  # 渲染帧率，提高以保证GUI流畅
-CAMERA_SPEED = 10
+# 地图与时间
+GRID_SIZE = 10          # 10x10 网格
+MAX_TURNS = 15         # 实验持续回合数
 
-# AI决策频率控制（与FPS分离）
-AI_DECISION_INTERVAL = 10.0  # AI每10秒做一次决策
+# 资源生成模式
+# "ABUNDANCE": 固定点刷新资源; "FAMINE": 不刷新
+SCARCITY_MODE = "FAMINE" 
+RESOURCE_SPAWN_LOC = (5, 5) 
 
-# 声音范围常量
-VOLUME_NORMAL_RANGE = 10.0  # 正常说话范围
-VOLUME_LOUD_RANGE = 15.0  # 喊叫范围
+# 生存数值 (Metabolism)
+ENERGY_INIT = 100
+METABOLISM_COST = 5      # 每回合基础扣除
+ENERGY_GAIN_EAT = 30     # 进食恢复
+INVENTORY_CAPACITY = 5   # 背包上限
 
-# 大模型调用冷却时间（秒）
-MODEL_CALL_COOLDOWN = 10
-
-# 资源类型与采集量
-RESOURCE_TYPES = {
-    "tree": {"name": "树木", "gather": "wood", "amount": 3},
-    "freshwater": {"name": "淡水", "gather": "水", "amount": 5},
-    "fish": {"name": "鱼群", "gather": "鱼", "amount": 2},
-    "fruit": {"name": "果树", "gather": "果实", "amount": 4},
-    "wreckage": {"name": "残骸", "gather": "杂物", "amount": 3}
+# 动作能耗表 (Action Costs)
+ACTION_COSTS = {
+    "move": 2,          # 基础移动消耗
+    "talk": 1,          # 说话消耗 (低成本)
+    "gather": 5,        # 采集消耗
+    "give": 1,          # 赠予消耗
+    "rob": 15,          # 抢劫消耗 (高风险)
+    "idle": 0,          # 待机
+    "eat": 0            # 进食
 }
 
-# 颜色定义
-COLORS = {
-    "grass": (34, 139, 34),
-    "water": (0, 100, 200),
-    "sand": (244, 164, 96),
-    "wood": (139, 69, 19),
-    "stone": (169, 169, 169),
-    "food": (255, 215, 0),
-    "npc": (255, 215, 0),  # 黄色 - 非对话时的颜色
-    "npc_talking": (100, 150, 255),  # 蓝色 - 对话时的颜色
-    "npc_dead": (100, 100, 100),  # 灰色 - 死亡状态
-    "ui": (50, 50, 50),
-    "highlight": (255, 255, 0, 100),
-    "tree": (34, 139, 34),
-    "freshwater": (0, 200, 255),
-    "fish": (255, 100, 100),
-    "fruit": (255, 0, 0),
-    "wreckage": (100, 100, 100)
+# 初始资源设定
+INITIAL_RESOURCES = {
+    "RICH": 5,
+    "MIDDLE": 3,
+    "POOR": 0
 }
-
-# 初始化字体
-def init_fonts():
-    """初始化游戏字体"""
-    pygame.font.init()
-    font_names = ["SimHei", "WenQuanYi Micro Hei", "Heiti TC", "Arial Unicode MS"]
-    game_font = pygame.font.SysFont(font_names, 24)
-    small_font = pygame.font.SysFont(font_names, 16)
-    large_font = pygame.font.SysFont(font_names, 32)
-    tiny_font = pygame.font.SysFont(font_names, 12)
-    return game_font, small_font, large_font, tiny_font
