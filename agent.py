@@ -30,6 +30,12 @@ class Agent:
 
         # 1. 获取上下文
         gps_info = world.get_all_agent_positions()
+
+         # 🔴 新增：获取资源信息
+        resource_info = world.get_visible_resources()
+        
+        memory_text = self.memory.retrieve() 
+        time_info = f"Turn {world.turn}"
         
         # --- 修改点：移除 limit 参数 ---
         memory_text = self.memory.retrieve() 
@@ -40,7 +46,8 @@ class Agent:
         sys_p = prompts.PERSONALITY_PROMPTS.get(self.personality, "You are a survivor.")
         sys_p = sys_p.format(name=self.name)
         
-        user_p = prompts.get_user_prompt(self, gps_info, memory_text, time_info)
+         # 🔴 修改：传入 resource_info
+        user_p = prompts.get_user_prompt(self, gps_info, resource_info, memory_text, time_info)
         
         # 3. 调用 API
         return client.get_response(sys_p, user_p)
